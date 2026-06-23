@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقرير حملة NM-Clicks-6-11-2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F1117;
+  --surface:#181C26;
+  --surface2:#1E2330;
+  --border:rgba(255,255,255,0.07);
+  --accent:#C8F135;
+  --accent2:#4F8EF7;
+  --red:#F75A5A;
+  --orange:#F7A035;
+  --green:#35D4A0;
+  --text:#F0F2F8;
+  --muted:#8B90A0;
+  --radius:14px;
+}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:32px 24px}
+h1,h2,h3,h4{font-weight:700}
+
+/* HEADER */
+.report-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:36px;flex-wrap:wrap;gap:16px}
+.report-title h1{font-size:26px;font-weight:900;letter-spacing:-0.5px}
+.report-title p{color:var(--muted);font-size:13px;margin-top:6px}
+.report-meta{text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px}
+.report-meta .period{font-size:13px;color:var(--muted)}
+.report-meta .campaign-name{font-size:14px;font-weight:700;color:var(--accent);margin-top:4px}
+.status-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 12px;border-radius:100px;margin-top:8px}
+.badge-ended{background:rgba(247,90,90,0.15);color:var(--red);border:1px solid rgba(247,90,90,0.3)}
+.badge-ok{background:rgba(53,212,160,0.15);color:var(--green);border:1px solid rgba(53,212,160,0.3)}
+.badge-warn{background:rgba(247,160,53,0.15);color:var(--orange);border:1px solid rgba(247,160,53,0.3)}
+
+/* ALERT BOX */
+.alert{background:rgba(247,90,90,0.08);border:1px solid rgba(247,90,90,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;display:flex;gap:14px;align-items:flex-start}
+.alert-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.alert h4{font-size:15px;color:var(--red);margin-bottom:4px}
+.alert p{font-size:13px;color:var(--muted);line-height:1.7}
+
+/* SECTION TITLE */
+.section-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;margin-top:36px}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:8px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 18px}
+.kpi-label{font-size:12px;color:var(--muted);margin-bottom:8px}
+.kpi-value{font-size:28px;font-weight:900;line-height:1}
+.kpi-sub{font-size:12px;color:var(--muted);margin-top:6px}
+.kpi-accent{color:var(--accent)}
+.kpi-red{color:var(--red)}
+.kpi-orange{color:var(--orange)}
+.kpi-green{color:var(--green)}
+.kpi-blue{color:var(--accent2)}
+
+/* CHARTS ROW */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+.chart-card h3{font-size:14px;font-weight:700;margin-bottom:18px;color:var(--text)}
+.chart-card .chart-sub{font-size:12px;color:var(--muted);margin-bottom:14px;margin-top:-10px}
+
+/* KEYWORDS TABLE */
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:8px}
+.table-card h3{font-size:14px;font-weight:700;margin-bottom:18px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:0 12px 12px;text-align:right;border-bottom:1px solid var(--border)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,0.04)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,0.02)}
+tbody td{padding:12px;color:var(--text);line-height:1.4}
+.kw-name{font-weight:600;font-size:13px}
+.match-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:100px;font-weight:700}
+.match-broad{background:rgba(79,142,247,0.15);color:var(--accent2)}
+.match-phrase{background:rgba(200,241,53,0.12);color:var(--accent)}
+.match-exact{background:rgba(53,212,160,0.12);color:var(--green)}
+.bar-mini{height:4px;border-radius:4px;background:rgba(255,255,255,0.06);margin-top:6px;width:100%}
+.bar-mini-fill{height:100%;border-radius:4px}
+
+/* INSIGHTS */
+.insights-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.insight-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.insight-card.red{border-color:rgba(247,90,90,0.3);background:rgba(247,90,90,0.05)}
+.insight-card.green{border-color:rgba(53,212,160,0.3);background:rgba(53,212,160,0.05)}
+.insight-card.orange{border-color:rgba(247,160,53,0.3);background:rgba(247,160,53,0.05)}
+.insight-card.blue{border-color:rgba(79,142,247,0.3);background:rgba(79,142,247,0.05)}
+.insight-icon{font-size:22px;margin-bottom:10px}
+.insight-card h4{font-size:14px;font-weight:700;margin-bottom:6px}
+.insight-card p{font-size:13px;color:var(--muted);line-height:1.7}
+.insight-card .rec{font-size:12px;font-weight:700;margin-top:10px;padding:6px 12px;border-radius:8px;display:inline-block}
+.rec-red{background:rgba(247,90,90,0.15);color:var(--red)}
+.rec-green{background:rgba(53,212,160,0.15);color:var(--green)}
+.rec-orange{background:rgba(247,160,53,0.15);color:var(--orange)}
+.rec-blue{background:rgba(79,142,247,0.15);color:var(--accent2)}
+
+/* BUDGET */
+.budget-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px}
+.budget-row:last-child{border-bottom:none}
+.budget-label{color:var(--muted);font-size:13px}
+.budget-val{font-weight:700}
+
+/* FOOTER */
+.report-footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);flex-wrap:wrap;gap:8px}
+
+@media(max-width:700px){
+  .charts-row,.insights-grid{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .report-header{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="report-header">
+  <div class="report-title">
+    <h1>تقرير أداء الحملة الإعلانية</h1>
+    <p>Google Ads — Search Campaign | تحليل شامل ومقترحات تحسين</p>
+  </div>
+  <div class="report-meta">
+    <div class="period">📅 الفترة: 24 مايو — 20 يونيو 2026</div>
+    <div class="campaign-name">NM-Clicks-6-11-2026</div>
+    <span class="status-badge badge-ended">⛔ الحملة منتهية</span>
+  </div>
+</div>
+
+<!-- CRITICAL ALERT -->
+<div class="alert">
+  <div class="alert-icon">⚠️</div>
+  <div>
+    <h4>تنبيه رئيسي: الحملة انتهت وجميع الكلمات المفتاحية غير مؤهلة</h4>
+    <p>السبب: "campaign ended" — الميزانية الكلية (650 ريال) استُنفدت أو تاريخ الحملة انتهى. جميع الكلمات المفتاحية الـ 49 وصلها وضع "Not Eligible". يجب إنشاء حملة جديدة أو تمديد الميزانية لاستئناف الظهور.</p>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="section-label">مؤشرات الأداء الرئيسية</div>
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">إجمالي الظهور</div>
+    <div class="kpi-value kpi-blue">7,940</div>
+    <div class="kpi-sub">مشاهدة للإعلان</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">إجمالي النقرات</div>
+    <div class="kpi-value kpi-accent">274</div>
+    <div class="kpi-sub">زيارة للموقع</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">معدل النقر CTR</div>
+    <div class="kpi-value kpi-green">3.45%</div>
+    <div class="kpi-sub">المعدل الصناعي: 2-3%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">متوسط تكلفة النقرة</div>
+    <div class="kpi-value kpi-accent">1.73 ر</div>
+    <div class="kpi-sub">منخفض جداً ✓</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">إجمالي الإنفاق</div>
+    <div class="kpi-value kpi-blue">473.76 ر</div>
+    <div class="kpi-sub">من ميزانية 650 ر</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">التحويلات</div>
+    <div class="kpi-value kpi-red">0</div>
+    <div class="kpi-sub">⚠️ لا توجد تحويلات</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">الميزانية المتبقية</div>
+    <div class="kpi-value kpi-orange">176.24 ر</div>
+    <div class="kpi-sub">27% من الميزانية</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">الكلمات المفتاحية</div>
+    <div class="kpi-value kpi-accent">49</div>
+    <div class="kpi-sub">كلمة نشطة</div>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="section-label">تحليل الأداء البصري</div>
+<div class="charts-row">
+  <div class="chart-card">
+    <h3>توزيع النقرات حسب الكلمة المفتاحية (Top 6)</h3>
+    <p class="chart-sub">النقرات الفعلية من كل كلمة</p>
+    <div style="position:relative;height:220px">
+      <canvas id="kwChart" role="img" aria-label="مخطط شريطي يوضح النقرات لكل كلمة مفتاحية">النقرات: اعلان وتسويق 82، شركة اعلان وتسويق 67، وكالة تسويق 31، أفضل شركة تسويق الكتروني 11، التسويق في الشركات 10، شركة تسويق رقمي 9</canvas>
+    </div>
+  </div>
+  <div class="chart-card">
+    <h3>معدل النقر CTR مقارنة بالإنفاق</h3>
+    <p class="chart-sub">الكلمات الأعلى CTR مقابل تكلفتها</p>
+    <div style="position:relative;height:220px">
+      <canvas id="ctrChart" role="img" aria-label="مخطط يوضح معدل النقر مقابل التكلفة لكل كلمة">CTR مقابل التكلفة للكلمات الرئيسية</canvas>
+    </div>
+  </div>
+</div>
+
+<div class="charts-row">
+  <div class="chart-card">
+    <h3>توزيع الإنفاق حسب نوع المطابقة</h3>
+    <p class="chart-sub">Broad vs Phrase vs Exact</p>
+    <div style="position:relative;height:200px">
+      <canvas id="matchChart" role="img" aria-label="مخطط دائري لتوزيع الإنفاق حسب نوع المطابقة">Broad 61%، Phrase 34%، Exact 5%</canvas>
+    </div>
+  </div>
+  <div class="chart-card">
+    <h3>الميزانية: المُنفق مقابل المتبقي</h3>
+    <p class="chart-sub">من إجمالي ميزانية 650 ريال</p>
+    <div style="position:relative;height:200px">
+      <canvas id="budgetChart" role="img" aria-label="مخطط دائري للميزانية المنفقة والمتبقية">منفق 473 ريال، متبقي 176 ريال</canvas>
+    </div>
+  </div>
+</div>
+
+<!-- KEYWORDS TABLE -->
+<div class="section-label">تفصيل الكلمات المفتاحية النشطة (الأعلى أداءً)</div>
+<div class="table-card">
+  <h3>أداء الكلمات المفتاحية — مرتبة حسب النقرات</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>الكلمة المفتاحية</th>
+        <th>نوع المطابقة</th>
+        <th>ظهور</th>
+        <th>نقرات</th>
+        <th>CTR</th>
+        <th>CPC</th>
+        <th>التكلفة</th>
+        <th>الأداء</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="kw-name">اعلان وتسويق</div></td>
+        <td><span class="match-badge match-broad">Broad</span></td>
+        <td>3,510</td>
+        <td><strong>82</strong></td>
+        <td>2.34%</td>
+        <td>1.45 ر</td>
+        <td>118.97 ر</td>
+        <td><div style="color:#F7A035;font-size:12px">⚡ أعلى إنفاق</div><div class="bar-mini"><div class="bar-mini-fill" style="width:100%;background:#F7A035"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="kw-name">شركة اعلان وتسويق</div></td>
+        <td><span class="match-badge match-phrase">Phrase</span></td>
+        <td>1,456</td>
+        <td><strong>67</strong></td>
+        <td>4.60%</td>
+        <td>1.92 ر</td>
+        <td>128.67 ر</td>
+        <td><div style="color:#F75A5A;font-size:12px">⚠️ أعلى تكلفة</div><div class="bar-mini"><div class="bar-mini-fill" style="width:82%;background:#F75A5A"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="kw-name">وكالة تسويق</div></td>
+        <td><span class="match-badge match-phrase">Phrase</span></td>
+        <td>321</td>
+        <td><strong>31</strong></td>
+        <td>9.66%</td>
+        <td>1.60 ر</td>
+        <td>49.56 ر</td>
+        <td><div style="color:#35D4A0;font-size:12px">✅ كفاءة عالية</div><div class="bar-mini"><div class="bar-mini-fill" style="width:66%;background:#35D4A0"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="kw-name">أفضل شركة تسويق الكتروني في السعودية</div></td>
+        <td><span class="match-badge match-broad">Broad</span></td>
+        <td>112</td>
+        <td><strong>11</strong></td>
+        <td>9.82%</td>
+        <td>1.33 ر</td>
+        <td>14.61 ر</td>
+        <td><div style="color:#35D4A0;font-size:12px">🏆 أفضل CTR</div><div class="bar-mini"><div class="bar-mini-fill" style="width:38%;background:#35D4A0"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="kw-name">أفضل شركة تسويق</div></td>
+        <td><span class="match-badge match-phrase">Phrase</span></td>
+        <td>25</td>
+        <td><strong>6</strong></td>
+        <td>24.00%</td>
+        <td>2.89 ر</td>
+        <td>17.34 ر</td>
+        <td><div style="color:#C8F135;font-size:12px">⭐ CTR استثنائي</div><div class="bar-mini"><div class="bar-mini-fill" style="width:90%;background:#C8F135"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="kw-name">التسويق في الشركات</div></td>
+        <td><span class="match-badge match-broad">Broad</span></td>
+        <td>340</td>
+        <td><strong>10</strong></td>
+        <td>2.94%</td>
+        <td>1.42 ر</td>
+        <td>14.21 ر</td>
+        <td><div style="color:#8B90A0;font-size:12px">— متوسط</div><div class="bar-mini"><div class="bar-mini-fill" style="width:25%;background:#8B90A0"></div></div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- BUDGET BREAKDOWN -->
+<div class="section-label">تفصيل الميزانية</div>
+<div class="table-card">
+  <h3>تحليل الإنفاق</h3>
+  <div class="budget-row"><div class="budget-label">الميزانية الكلية المخصصة</div><div class="budget-val">650.00 ر</div></div>
+  <div class="budget-row"><div class="budget-label">إجمالي الإنفاق الفعلي</div><div class="budget-val kpi-orange">473.76 ر</div></div>
+  <div class="budget-row"><div class="budget-label">الميزانية المتبقية</div><div class="budget-val kpi-green">176.24 ر</div></div>
+  <div class="budget-row"><div class="budget-label">نسبة الاستهلاك</div><div class="budget-val">72.9%</div></div>
+  <div class="budget-row"><div class="budget-label">متوسط الإنفاق اليومي</div><div class="budget-val">17.55 ر / يوم</div></div>
+  <div class="budget-row"><div class="budget-label">تكلفة كل نقرة (CPC)</div><div class="budget-val kpi-green">1.73 ر ✓ ممتاز</div></div>
+  <div class="budget-row"><div class="budget-label">تكلفة كل تحويل</div><div class="budget-val kpi-red">غير محدد (0 تحويل)</div></div>
+</div>
+
+<!-- INSIGHTS -->
+<div class="section-label">التشخيص والتوصيات</div>
+<div class="insights-grid">
+  <div class="insight-card red">
+    <div class="insight-icon">⛔</div>
+    <h4>الحملة منتهية — أولوية قصوى</h4>
+    <p>جميع الـ 49 كلمة مفتاحية وضعها "Not Eligible — campaign ended". الإعلانات توقفت تماماً عن الظهور منذ انتهاء الميزانية أو الفترة الزمنية.</p>
+    <span class="rec rec-red">← أنشئ حملة جديدة أو جدّد الميزانية</span>
+  </div>
+  <div class="insight-card red">
+    <div class="insight-icon">📉</div>
+    <h4>صفر تحويلات رغم 274 نقرة</h4>
+    <p>274 شخص زار الموقع لكن لا أحد أكمل أي إجراء. إما تتبع التحويل غير مفعّل، أو الصفحة المقصودة لا تحوّل الزوار.</p>
+    <span class="rec rec-red">← فعّل Google Tag Manager وتتبع النماذج</span>
+  </div>
+  <div class="insight-card orange">
+    <div class="insight-icon">🎯</div>
+    <h4>استراتيجية Maximize Clicks خاطئة</h4>
+    <p>الحملة مُحسّنة لجمع نقرات بأقل سعر — وهي ناجحة في ذلك (1.73 ر/نقرة). لكن هذه الاستراتيجية لا تستهدف جودة العميل أو احتمالية التحويل.</p>
+    <span class="rec rec-orange">← حوّل إلى Maximize Conversions بعد تفعيل التتبع</span>
+  </div>
+  <div class="insight-card green">
+    <div class="insight-icon">✅</div>
+    <h4>CTR جيد (3.45%) وCPC منخفض</h4>
+    <p>معدل النقر أعلى من المتوسط الصناعي (2-3%). وتكلفة النقرة 1.73 ريال ممتازة لقطاع التسويق في السعودية. الإعلان جاذب ومقنع.</p>
+    <span class="rec rec-green">← حافظ على نصوص الإعلان الحالية</span>
+  </div>
+  <div class="insight-card green">
+    <div class="insight-icon">⭐</div>
+    <h4>كلمة "أفضل شركة تسويق" — نجمة خفية</h4>
+    <p>CTR وصل 24% من 25 ظهور فقط — هذا رقم استثنائي. الكلمة بحاجة لميزانية أكبر وظهور أعلى في الحملة القادمة.</p>
+    <span class="rec rec-green">← ضاعف ميزانية هذه الكلمة في الحملة الجديدة</span>
+  </div>
+  <div class="insight-card blue">
+    <div class="insight-icon">📊</div>
+    <h4>Broad Match يستهلك 61% من الميزانية</h4>
+    <p>الكلمات الواسعة (Broad) تجذب ظهوراً عالياً لكن بنقرات أقل كفاءة. Phrase match تعطي توازناً أفضل بين الوصول والدقة.</p>
+    <span class="rec rec-blue">← ركّز على Phrase وExact في الحملة القادمة</span>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="section-label">الخطوات التالية الموصى بها</div>
+<div class="table-card">
+  <h3>خارطة الطريق للحملة القادمة</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th>الإجراء</th>
+        <th>الأولوية</th>
+        <th>السبب</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--red);font-weight:900">1</td>
+        <td>تفعيل تتبع التحويلات (Google Tag)</td>
+        <td><span class="status-badge badge-ended" style="font-size:11px">عاجل جداً</span></td>
+        <td style="color:var(--muted);font-size:13px">بدون تتبع لا يمكن قياس نجاح أي حملة</td>
+      </tr>
+      <tr>
+        <td style="color:var(--red);font-weight:900">2</td>
+        <td>إنشاء حملة جديدة بميزانية أعلى</td>
+        <td><span class="status-badge badge-ended" style="font-size:11px">عاجل جداً</span></td>
+        <td style="color:var(--muted);font-size:13px">الحملة الحالية منتهية تماماً</td>
+      </tr>
+      <tr>
+        <td style="color:var(--orange);font-weight:900">3</td>
+        <td>تحسين الصفحة المقصودة للتحويل</td>
+        <td><span class="status-badge badge-warn" style="font-size:11px">مهم</span></td>
+        <td style="color:var(--muted);font-size:13px">274 نقرة بدون تحويل = مشكلة في الصفحة</td>
+      </tr>
+      <tr>
+        <td style="color:var(--orange);font-weight:900">4</td>
+        <td>التركيز على Phrase & Exact Match</td>
+        <td><span class="status-badge badge-warn" style="font-size:11px">مهم</span></td>
+        <td style="color:var(--muted);font-size:13px">جودة نقرات أعلى بتكلفة أكثر كفاءة</td>
+      </tr>
+      <tr>
+        <td style="color:var(--green);font-weight:900">5</td>
+        <td>تحويل الاستراتيجية لـ Maximize Conversions</td>
+        <td><span class="status-badge badge-ok" style="font-size:11px">بعد التتبع</span></td>
+        <td style="color:var(--muted);font-size:13px">بعد جمع 30+ تحويل لتدريب الخوارزمية</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- FOOTER -->
+<div class="report-footer">
+  <div>تقرير أداء Google Ads — حملة NM-Clicks-6-11-2026</div>
+  <div>الفترة: 24 مايو — 20 يونيو 2026 | إجمالي الإنفاق: 473.76 ر من 650 ر</div>
+</div>
+
+<script>
+const accent = '#C8F135';
+const blue = '#4F8EF7';
+const red = '#F75A5A';
+const orange = '#F7A035';
+const green = '#35D4A0';
+const muted = 'rgba(255,255,255,0.08)';
+const textColor = '#8B90A0';
+
+Chart.defaults.color = textColor;
+Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+Chart.defaults.font.family = 'Cairo';
+
+// KW Chart
+new Chart(document.getElementById('kwChart'), {
+  type: 'bar',
+  data: {
+    labels: ['اعلان وتسويق','شركة اعلان وتسويق','وكالة تسويق','أفضل شركة تسويق الكتروني','التسويق في الشركات','شركة تسويق رقمي'],
+    datasets: [{
+      label: 'النقرات',
+      data: [82, 67, 31, 11, 10, 9],
+      backgroundColor: [orange, red, green, green, blue, blue],
+      borderRadius: 6, borderSkipped: false
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { font: { size: 10 }, maxRotation: 30 }, grid: { display: false } },
+      y: { ticks: { font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+    }
+  }
+});
+
+// CTR Chart
+new Chart(document.getElementById('ctrChart'), {
+  type: 'bar',
+  data: {
+    labels: ['أفضل شركة تسويق','وكالة تسويق','أفضل شركة تسويق الكتروني','شركة اعلان وتسويق','شركة تسويق رقمي','اعلان وتسويق'],
+    datasets: [{
+      label: 'CTR %',
+      data: [24.00, 9.66, 9.82, 4.60, 5.11, 2.34],
+      backgroundColor: [accent, green, green, blue, blue, orange],
+      borderRadius: 6, borderSkipped: false
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { font: { size: 10 }, maxRotation: 30 }, grid: { display: false } },
+      y: { ticks: { callback: v => v + '%', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+    }
+  }
+});
+
+// Match Type
+new Chart(document.getElementById('matchChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Broad Match', 'Phrase Match', 'Exact Match'],
+    datasets: [{
+      data: [61, 34, 5],
+      backgroundColor: [blue, accent, green],
+      borderColor: '#181C26', borderWidth: 3, hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '65%',
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 16, font: { size: 12 }, usePointStyle: true } }
+    }
+  }
+});
+
+// Budget
+new Chart(document.getElementById('budgetChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['منفق (473 ر)', 'متبقي (176 ر)'],
+    datasets: [{
+      data: [473.76, 176.24],
+      backgroundColor: [orange, 'rgba(255,255,255,0.08)'],
+      borderColor: '#181C26', borderWidth: 3, hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '65%',
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 16, font: { size: 12 }, usePointStyle: true } }
+    }
+  }
+});
+</script>
+</body>
+</html>
